@@ -1,1 +1,23 @@
 node_modules
+import SETTINGS from './config.exchanges';
+import BFX from 'bitfinex-api-node';
+
+const bitfinex = new BFX(SETTINGS['BITFINEX'].API_KEY, SETTINGS['BITFINEX'].API_SECRET, { version: 1, transform: true }).rest;
+const bitfinex_websocket = new BFX('','', { version: 2, transform: true }).ws;
+
+const devMode = process.argv.includes('dev');
+let prices = {}, dollarBalance = 0;
+
+const tick = async pairArray => {
+    return await pairArray.map(pair =>  prices[pair]);
+}
+
+const balance = async pair => {
+    try {
+        
+    }
+    catch (err) {
+     console.log('err');
+    }
+   
+}

@@ -1,46 +1,40 @@
 import util from 'util';
-import Exchanges from './exchanges';
-// import Database from '../database';
-// import Pricing from '../pricing';
-// import Price from '../models/price';
-// import Trading from '../trading';
-// import Model from '../wallet/model';
-// import Indicators from '../methods/indicators/index';
+import public_webSockets from './exchanges/public_websockets';
+import store from './store';
 
 var setTimeoutPromise = util.promisify(setTimeout);
 
 const App = () => {
+    const mainLoop = async () => {
+        var time = 3 * 1000;
 
-	const mainLoop = async () => {
+        //log prices on redux
+        console.log('pricing Poloniex', store.getState().poloniex_pricing);
 
-		var time = 3 * 1000;
-		try {
-			
-			// var prices = await this.Pricing.getPrices();
-			// var price = await Price.create(prices);
-            // console.log(price.spot);
-            
-            console.log('hi');
-			
-			//await this.Trading.init(price);
+        console.log('pricing Bitfinex', store.getState().bitfinex_pricing);
 
-		} catch (error) {
-			console.log(error);
-		}
-		await setTimeoutPromise(time);
-		mainLoop();
-	}
+        //TODO inside loop:
 
-	const  init = () => {
-		// var db = new Database();
-		// await db.connect();
-		// await Model.initialize();
-		// var indicators = new Indicators();
-		// await indicators.init();
-		  mainLoop();
-    }
-    
+        //    check for oper Orders -> close or not?
+
+        //    compare PRICES
+        //    search for ARBITRAGE OPORTUNITies
+        //    set ORDER
+
+        await setTimeoutPromise(time);
+        mainLoop();
+    };
+
+    const init = () => {
+        //connect to public websockets and save last prices on redux state
+
+        let exchanges = ['Bitfinex', 'Poloniex'];
+        exchanges.forEach((exchange) => public_webSockets(exchange));
+
+        mainLoop();
+    };
+
     return init();
-}
+};
 
-export default App
+export default App;
